@@ -50,18 +50,27 @@ def daysinAdvanceAvgs():
   daysInAdvance = df[4].unique()
   for days in daysInAdvance:
     tempData = df[df[4] == days]
+    #tempData.drop(tempData.columns[[2,3,4]],axis=1)
     #avgsTable = tempData.groupby([0, 1])[5].mean()
-    avgsTable = tempData.groupby([0, 1]).mean()
-    avgs.append(avgsTable[5].tolist())
+    tempData[5] = tempData[5].astype(float)
+    avgsTable = tempData.groupby([0, 1, 4])
+    #avgsTable[5] = avgsTable[5].astype(float)
+    avgsTable = avgsTable[5].mean().tolist()
+    #avgsTable.mean()
+    #avgs = avgsTable.mean()
+    #avgTable = avgsTable.mean()
+    avgs.append(avgsTable)
+    #print(avgs)
 
   updateDaysinAdvance(avgs)
 
 
 #Write Averages per Days in Advance to Spreadsheet
 def updateDaysinAdvance(avgs):
+  print(avgs)
   for i in range(0, len(avgs)):
     for j in range(0,len(avgs[i])):
-      ws.update_cell(i+2, j+2, f'{avgs[i][j]}')
+      ws.update_cell(i+2, j+2, f'{avgs[i][j]:.1f}')
 
   colourDaysinAdvance(avgs)
 
